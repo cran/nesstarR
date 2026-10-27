@@ -1,0 +1,31 @@
+Package: nesstarR
+Type: Package
+Title: Read and Export 'Nesstar' Binary Files
+Version: 0.1.0
+Authors@R: person("Saket", "Choudhary", email = "saketc@iitb.ac.in",
+    role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0001-5202-7633"))
+Description: Reads '.Nesstar' binary files into data frames. '.Nesstar'
+    is the file format of 'Nesstar Publisher', survey documentation software
+    from the International Household Survey Network
+    <https://www.ihsn.org/node/557>. Statistical agencies, for example the
+    Ministry of Statistics and Programme Implementation ('MoSPI', India),
+    publish survey microdata in this format. 
+License: MIT + file LICENSE
+URL: https://nesstarr.saketlab.org, https://github.com/saketkc/nesstarR
+BugReports: https://github.com/saketkc/nesstarR/issues
+Encoding: UTF-8
+Language: en-US
+Depends: R (>= 4.1.0)
+Imports: tools, utils
+Suggests: haven, knitr, rmarkdown, testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/Needs/website: pkgdown, archive, saketkc/mospiR
+VignetteBuilder: knitr
+NeedsCompilation: yes
+Config/roxygen2/version: 8.1.0
+Packaged: 2026-10-17 16:26:34 UTC; mcclintock
+Author: Saket Choudhary [aut, cre, cph] (ORCID:
+    <https://orcid.org/0000-0001-5202-7633>)
+Maintainer: Saket Choudhary <saketc@iitb.ac.in>
+Repository: CRAN
+Date/Publication: 2026-10-27 18:40:02 UTC

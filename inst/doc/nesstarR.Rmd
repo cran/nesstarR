@@ -1,0 +1,97 @@
+---
+title: "Get started with nesstarR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get started with nesstarR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+`.Nesstar` is the file format of Nesstar Publisher. Nesstar Publisher is
+survey documentation software from the
+[International Household Survey Network (IHSN)](https://www.ihsn.org/node/557).
+Statistical agencies, for example the Ministry of Statistics and Programme
+Implementation (MoSPI), India, publish survey microdata in this format.
+nesstarR reads these files in R. You do not need Nesstar software.
+
+This vignette uses a small synthetic file that comes with the package.
+For an example with real survey data, refer to the article "Read NSS 68
+data from the MoSPI portal" on the
+[package website](https://nesstarr.saketlab.org).
+
+```{r libs}
+library(nesstarR)
+```
+
+## Parse the file
+
+`nesstar_parse()` decodes the resource index, the dataset descriptors and
+the variable directories. It does not decode row data, and it does not keep
+the file in memory. The other functions read only the bytes that they need
+from the file.
+
+```{r parse}
+path <- system.file("extdata", "example.Nesstar", package = "nesstarR")
+x <- nesstar_parse(path)
+x
+```
+
+## List the datasets and variables
+
+One `.Nesstar` file can contain many datasets. `nesstar_datasets()` gives the
+number of rows and variables in each dataset.
+
+```{r datasets}
+nesstar_datasets(x)
+```
+
+`nesstar_variables()` gives the storage format of each variable in one
+dataset. Mode 5 is a numeric variable. Mode 1 is a string variable.
+
+```{r variables}
+nesstar_variables(x, dataset_number = 1)
+```
+
+## Read a dataset
+
+`nesstar_read_dataset()` decodes one dataset into a data frame. Missing
+values become `NA`.
+
+```{r read}
+nesstar_read_dataset(x, dataset_number = 1)
+```
+
+To decode only some columns, use the `columns` argument.
+
+```{r read-columns}
+nesstar_read_dataset(x, dataset_number = 1, columns = c("AGE", "NAME"))
+```
+
+## Read the labels
+
+Many `.Nesstar` files contain XML blocks with variable labels and category
+codes. `nesstar_metadata()` decodes these blocks.
+
+```{r metadata}
+meta <- nesstar_metadata(x)
+meta$datasets[[1]]$variables[[1]]
+```
+
+Some older files do not contain these blocks. For these files,
+`nesstar_metadata()` gives a warning and returns `NULL`.
+
+## Export to CSV
+
+`nesstar_export()` writes each dataset to a different CSV file. By default,
+it reads 50,000 rows at a time and writes gzip files. Thus, the memory use
+stays low for large files.
+
+```{r export}
+out <- nesstar_export(x, output_dir = tempdir())
+basename(out)
+read.csv(out[1])
+```
